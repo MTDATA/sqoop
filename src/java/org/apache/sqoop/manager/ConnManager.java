@@ -25,6 +25,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -123,6 +124,14 @@ public abstract class ConnManager {
       columnTypes = getColumnTypesForQuery(query);
     }
     return columnTypes;
+  }
+
+
+  /**
+   * Get the column names comment mapping.
+   */
+  public Map<String, String> getColumnComments(String tableName) {
+      return new HashMap<String, String>();
   }
 
   /**

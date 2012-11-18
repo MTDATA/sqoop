@@ -111,8 +111,16 @@ public class TableDefWriter {
   }
 
   /**
+   * Get the column names comment mapping.
+   */
+  private Map<String, String> getColumnComments() {
+      return connManager.getColumnComments(inputTableName);
+  }
+
+  /**
    * @return the CREATE TABLE statement for the table to load into hive.
    */
+
   public String getCreateTableStmt() throws IOException {
     Map<String, Integer> columnTypes;
     Properties userMapping = options.getMapColumnHive();
@@ -128,6 +136,9 @@ public class TableDefWriter {
         columnTypes = connManager.getColumnTypesForQuery(options.getSqlQuery());
       }
     }
+
+    Map<String, String> columnComments;
+    columnComments = getColumnComments();
 
     String [] colNames = getColumnNames();
     StringBuilder sb = new StringBuilder();
@@ -173,6 +184,10 @@ public class TableDefWriter {
       }
 
       sb.append('`').append(col).append("` ").append(hiveColType);
+
+      if (columnComments.containsKey(col)) {
+          sb.append(" COMMENT '").append(columnComments.get(col)).append("'");
+      }
 
       if (HiveTypes.isHiveTypeImprovised(colType)) {
         LOG.warn(

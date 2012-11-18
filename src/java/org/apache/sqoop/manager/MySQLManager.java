@@ -22,8 +22,12 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.sql.Connection;
+import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Map;
+import java.util.HashMap;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -223,6 +227,58 @@ public class MySQLManager
   @Override
   protected String getSchemaQuery() {
     return "SELECT SCHEMA()";
+  }
+
+  protected String getColumnCommentQuery(String tableName) {
+    return
+      "SELECT COLUMN_NAME, COLUMN_COMMENT FROM INFORMATION_SCHEMA.COLUMNS "
+    + "WHERE TABLE_SCHEMA = (" + getSchemaQuery() + ") "
+    + "  AND TABLE_NAME = '" + tableName + "' ";
+  }
+
+  @Override
+  public Map<String, String> getColumnComments(String tableName) {
+    Map<String, String> columnComments = new HashMap<String, String>();
+    if (null != tableName) {
+        Connection c = null;
+        Statement s = null;
+        ResultSet rs = null;
+        try {
+        c = getConnection();
+        s = c.createStatement();
+        rs = s.executeQuery(getColumnCommentQuery(tableName));
+        while (rs.next()) {
+          columnComments.put(rs.getString(1), rs.getString(2));
+        }
+        c.commit();
+    } catch (SQLException sqle) {
+        try {
+            if (c != null) {
+                c.rollback();
+            }
+        } catch (SQLException ce) {
+            LOG.error("Failed to rollback transaction", ce);
+        }
+        LOG.error("Failed to get column comments", sqle);
+        throw new RuntimeException(sqle);
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException re) {
+                  LOG.error("Failed to close resultset", re);
+                }
+            }
+            if (s != null) {
+                try {
+                  s.close();
+                } catch (SQLException se) {
+                  LOG.error("Failed to close statement", se);
+                }
+            }
+        }
+    }
+    return columnComments;
   }
 }
 
