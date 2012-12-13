@@ -307,7 +307,8 @@ public class MySQLExportMapper<KEYIN, VALIN>
     this.conf = context.getConfiguration();
 
     // TODO: Support additional encodings.
-    this.mysqlCharSet = MySQLUtils.MYSQL_DEFAULT_CHARSET;
+    // this.mysqlCharSet = MySQLUtils.MYSQL_DEFAULT_CHARSET;
+    this.mysqlCharSet = "UTF-8";
 
     this.checkpointDistInBytes = conf.getLong(
         MYSQL_CHECKPOINT_BYTES_KEY, DEFAULT_CHECKPOINT_BYTES);
