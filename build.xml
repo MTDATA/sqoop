@@ -288,6 +288,10 @@
   <property name="java.security.krb5.kdc"
             value="kdc0.ox.ac.uk:kdc1.ox.ac.uk"/>
 
+  <!-- ref:https://reviews.apache.org/r/9961/diff/#index_header  -->
+  <property name="skip-real-docs"
+            value="true"/>
+
   <!-- The classpath for compiling and running Sqoop -->
   <if>
     <isset property="hadoop.home" />
@@ -944,7 +948,7 @@
   <target name="docs" depends="real-docs,relnotes,javadoc"
       description="Build documentation"/>
 
-  <target name="real-docs" depends="docs-uptodate,init" unless="docs.uptodate">
+  <target name="real-docs" depends="docs-uptodate,init" unless="skip-real-docs">
     <exec executable="make" failonerror="true">
       <arg value="-C" />
       <arg value="${basedir}/src/docs" />
