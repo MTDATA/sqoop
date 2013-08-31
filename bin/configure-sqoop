@@ -35,10 +35,10 @@ fi
 # Find paths to our dependency systems. If they are unset, use CDH defaults.
 
 if [ -z "${HADOOP_HOME}" ]; then
-  HADOOP_HOME=/usr/lib/hadoop
+  HADOOP_HOME=/opt/local/hadoop
 fi
 if [ -z "${HBASE_HOME}" ]; then
-  HBASE_HOME=/usr/lib/hbase
+  HBASE_HOME=/opt/local/hbase
 fi
 
 # Check: If we can't find our dependencies, give up here.
