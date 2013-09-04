@@ -37,9 +37,15 @@ fi
 if [ -z "${HADOOP_HOME}" ]; then
   HADOOP_HOME=/opt/local/hadoop
 fi
-if [ -z "${HBASE_HOME}" ]; then
-  HBASE_HOME=/opt/local/hbase
+
+if [ -z "${HIVE_HOME}" ]; then
+  HIVE_HOME=/opt/local/hive
 fi
+
+# ref: http://stackoverflow.com/questions/16133156/sqoop-hive-exited-with-status-1
+#if [ -z "${HBASE_HOME}" ]; then
+#  HBASE_HOME=/opt/local/hbase
+#fi
 
 # Check: If we can't find our dependencies, give up here.
 if [ ! -d "${HADOOP_HOME}" ]; then
@@ -49,10 +55,10 @@ if [ ! -d "${HADOOP_HOME}" ]; then
 fi
 
 ## Moved to be a runtime check in sqoop.
-if [ ! -d "${HBASE_HOME}" ]; then
-  echo "Warning: $HBASE_HOME does not exist! HBase imports will fail."
-  echo 'Please set $HBASE_HOME to the root of your HBase installation.'
-fi
+#if [ ! -d "${HBASE_HOME}" ]; then
+#  echo "Warning: $HBASE_HOME does not exist! HBase imports will fail."
+#  echo 'Please set $HBASE_HOME to the root of your HBase installation.'
+#fi
 
 # Where to find the main Sqoop jar
 SQOOP_JAR_DIR=$SQOOP_HOME
@@ -79,10 +85,10 @@ if [ -d "$SQOOP_HOME/lib" ]; then
 fi
 
 # Add HBase to dependency list
-if [ -e "$HBASE_HOME/bin/hbase" ]; then
-  TMP_SQOOP_CLASSPATH=${SQOOP_CLASSPATH}:`$HBASE_HOME/bin/hbase classpath`
-  SQOOP_CLASSPATH=${TMP_SQOOP_CLASSPATH}
-fi
+#if [ -e "$HBASE_HOME/bin/hbase" ]; then
+#  TMP_SQOOP_CLASSPATH=${SQOOP_CLASSPATH}:`$HBASE_HOME/bin/hbase classpath`
+#  SQOOP_CLASSPATH=${TMP_SQOOP_CLASSPATH}
+#fi
 
 ZOOCFGDIR=${ZOOCFGDIR:-/etc/zookeeper}
 if [ -d "${ZOOCFGDIR}" ]; then
@@ -113,5 +119,5 @@ export SQOOP_CONF_DIR
 export SQOOP_JAR_DIR
 export HADOOP_CLASSPATH
 export HADOOP_HOME
-export HBASE_HOME
-
+export HIVE_HOME
+#export HBASE_HOME
